@@ -1,0 +1,53 @@
+%class "LangParser";
+%package "lang.ast";
+
+%embed {:
+	static public class SyntaxError extends RuntimeException { public SyntaxError(String msg) {super(msg);}}
+	// Disable syntax error recovery
+	protected void recoverFromError(Symbol token, TokenStream in) {
+		throw new SyntaxError("Cannot recover from the syntax error");
+	}
+:};
+
+%terminals COLON, SEP, LBRACKET, RBRACKET, LPAREN, RPAREN, ID, COMMA;
+
+%typeof rule_list = "List<Rule>";
+%typeof premises_list = "List<Formula>";
+%typeof rule = "Rule";
+%typeof formula = "Formula";
+%typeof term = "Term";
+%typeof term_list = "List<Term>";
+%typeof id = "String";
+
+%goal rule_list;
+
+rule_list =
+	  rule.a {: return new List().add(a); :}
+	| rule_list.a rule.b {: return a.add(b); :}
+	;
+
+premises_list =
+	  formula.a {: return new List().add(a); :}
+	| premises_list.a COMMA formula.b {: return a.add(b); :}
+	;
+
+rule =
+    LBRACKET id.id RBRACKET premises_list.premises SEP formula.conclusion {: return new Rule(id, conclusion, premises); :}
+  | LBRACKET id.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
+  ;
+
+formula = term.expr COLON term.ty {: return new Formula(expr, ty); :};
+
+term =
+    id.rulename LPAREN term_list.params RPAREN {: return new RuleTerm(rulename, params); :}
+  | id.rulename LPAREN RPAREN {: return new RuleTerm(rulename, new List()); :}
+  | id.id {: return new MetaVar(id); :}
+  ;
+
+term_list =
+	  term.a {: return new List().add(a); :}
+	| term_list.a COMMA term.b {: return a.add(b); :}
+	;
+
+id = ID;
+
