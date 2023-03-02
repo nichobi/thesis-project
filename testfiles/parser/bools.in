@@ -1,0 +1,14 @@
+[T-True]
+-----------
+true : Bool
+
+[T-False]
+------------
+false : Bool
+
+[T-Or]
+a : Bool,
+b : Bool
+---------------
+or(a, b) : Bool
+
