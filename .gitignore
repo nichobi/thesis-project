@@ -7,6 +7,7 @@ bin/**
 .classpath
 .project
 compiler.jar
+src/gen/**
 
 !src/**/build/
 

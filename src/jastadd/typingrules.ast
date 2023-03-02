@@ -1,10 +1,11 @@
-RuleSet ::= [Rule];
+RuleSet ::= Rule*;
 
 abstract Term;
-RuleTerm : Term ::= <RuleName> Term*;
-MetaVar : Term ::= <ID>;
+RuleTerm   : Term ::= <RuleName> Term*;
+Identifier : Term ::= <ID>;
 
 Rule ::= <Name> Conclusion:Formula Premises:Formula*;
 
-Formula ::= Expr:Term Ty:Term;
+abstract Formula;
+HasType : Formula ::= Expr:Term Ty:Term;
 

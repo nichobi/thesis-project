@@ -11,6 +11,7 @@
 
 %terminals COLON, SEP, LBRACKET, RBRACKET, LPAREN, RPAREN, ID, COMMA;
 
+%typeof ruleset = "RuleSet";
 %typeof rule_list = "List<Rule>";
 %typeof premises_list = "List<Formula>";
 %typeof rule = "Rule";
@@ -19,7 +20,9 @@
 %typeof term_list = "List<Term>";
 %typeof id = "String";
 
-%goal rule_list;
+%goal ruleset;
+
+ruleset = rule_list.a {: return new RuleSet(a); :};
 
 rule_list =
 	  rule.a {: return new List().add(a); :}
@@ -36,12 +39,12 @@ rule =
   | LBRACKET id.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
   ;
 
-formula = term.expr COLON term.ty {: return new Formula(expr, ty); :};
+formula = term.expr COLON term.ty {: return new HasType(expr, ty); :};
 
 term =
     id.rulename LPAREN term_list.params RPAREN {: return new RuleTerm(rulename, params); :}
   | id.rulename LPAREN RPAREN {: return new RuleTerm(rulename, new List()); :}
-  | id.id {: return new MetaVar(id); :}
+  | id.id {: return new Identifier(id); :}
   ;
 
 term_list =
