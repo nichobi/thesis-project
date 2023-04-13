@@ -24,3 +24,8 @@ RuleSet
         HasType
           Identifier ID="b"
           Identifier ID="Bool"
+    Rule Name="T-Zero"
+      HasType
+        Identifier ID="0"
+        Identifier ID="Int"
+      List
