@@ -1,0 +1,10 @@
+Language ::= Definition*;
+
+Definition ::= <Name> Expression*;
+
+Expression ::= Terms*;
+
+abstract Terms;
+Literal      : Terms ::= <Value>;
+MetaVariable : Terms ::= <DefinitionName>;
+

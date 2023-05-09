@@ -24,6 +24,7 @@ dependencies {
   jflex 'de.jflex:jflex:1.8.2'
   beaver 'org.extendj:nbfront:0.1.6'
   jastadd2 "org.jastadd:jastadd:2.3.5" // Selects which JastAdd version to use (optional).
+  implementation files('lib/jastadd2.jar')
 }
 
 // Needed to work with old DrAST versions.

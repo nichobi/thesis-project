@@ -1,0 +1,31 @@
+RuleSet
+  List
+    Rule Name="T-True"
+      HasType
+        Identifier ID="true"
+        Identifier ID="Bool"
+      List
+    Rule Name="T-False"
+      HasType
+        Identifier ID="false"
+        Identifier ID="Bool"
+      List
+    Rule Name="T-Or"
+      HasType
+        RuleTerm RuleName="or"
+          List
+            Identifier ID="a"
+            Identifier ID="b"
+        Identifier ID="Bool"
+      List
+        HasType
+          Identifier ID="a"
+          Identifier ID="Bool"
+        HasType
+          Identifier ID="b"
+          Identifier ID="Bool"
+    Rule Name="T-Zero"
+      HasType
+        Identifier ID="0"
+        Identifier ID="Int"
+      List

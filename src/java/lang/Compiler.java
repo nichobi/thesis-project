@@ -8,16 +8,25 @@ import java.io.Reader;
 import lang.ast.LangParser;
 import lang.ast.LangParser.SyntaxError;
 import lang.ast.LangScanner;
+import org.jastadd.Configuration;
+import org.jastadd.ast.AST.Grammar;
 
 public class Compiler {
 	public static void main(String args[]) {
-		if (args.length != 1) {
-			System.err.println("You must specify a source file on the command line!");
+		if (args.length != 2) {
+			System.err.println("You must specify a source file and AST");
 			System.exit(1);
 		}
 
 		try {
 			parse(new FileReader(args[0]));
+
+      Configuration config = new Configuration(new String[]{args[1]}, System.err);
+
+      JastAddChild jac = new JastAddChild(config);
+      Grammar grammar = jac.buildGrammar();
+
+
 		} catch (FileNotFoundException e) {
 			System.err.println(e.getMessage());
 		}
