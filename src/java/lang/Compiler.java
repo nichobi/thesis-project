@@ -10,6 +10,9 @@ import lang.ast.LangParser.SyntaxError;
 import lang.ast.LangScanner;
 import org.jastadd.Configuration;
 import org.jastadd.ast.AST.Grammar;
+import org.jastadd.ast.AST.ASTDecl;
+import org.jastadd.ast.AST.TypeDecl;
+import org.jastadd.ast.AST.Component;
 
 public class Compiler {
 	public static void main(String args[]) {
@@ -25,6 +28,32 @@ public class Compiler {
 
       JastAddChild jac = new JastAddChild(config);
       Grammar grammar = jac.buildGrammar();
+      for (ASTDecl root: grammar.roots()) {
+        System.out.println(root);
+        for(ASTDecl sub : root.parents()) {
+          System.out.println("  " + sub);
+        }
+      }
+      System.out.println(grammar.subclassMap());
+      System.out.println();
+      for (ASTDecl i : grammar.subclassMap().keySet()) {
+        if (i instanceof TypeDecl) System.out.println(i);
+        for (Component comp : i.getComponents()) {
+          System.out.println("  " + comp);
+          System.out.println("    " + comp.typeDecl());
+          System.out.println("    " + comp.hostClass());
+          System.out.println("    " + comp.name());
+          System.out.println("    " + comp.type());
+          System.out.println("    " + comp.kind());
+        }
+      }
+      System.out.println();
+      System.out.println(grammar.parentMap());
+      System.out.println(grammar.getTypeDeclList());
+//      for (TypeDecl td: grammar.findSubClasses(grammar.roots().get(0))) {
+//        System.out.println(td);
+//      }
+
 
 
 		} catch (FileNotFoundException e) {
