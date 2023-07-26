@@ -1,0 +1,8 @@
+Expression ::= Term;
+
+abstract Term;
+True  : Term;
+False  : Term;
+Or : Term ::= Left:Term Right:Term;
+Zero : Term;
+

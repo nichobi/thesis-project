@@ -1,0 +1,44 @@
+%class "LangParser";
+%package "lang.ast";
+
+%embed {:
+  static public class SyntaxError extends RuntimeException { public SyntaxError(String msg) {super(msg);}}
+  // Disable syntax error recovery
+  protected void recoverFromError(Symbol token, TokenStream in) {
+    throw new SyntaxError("Cannot recover from the syntax error");
+  }
+:};
+
+%terminals LPAREN, RPAREN, ID, COMMA, True, False, Or, Zero;
+
+%typeof ruleset = "RuleSet";
+%typeof rule_list = "List<Rule>";
+%typeof premises_list = "List<Formula>";
+%typeof rule = "Rule";
+%typeof formula = "Formula";
+%typeof term = "Term";
+%typeof term_list = "List<Term>";
+%typeof id = "String";
+
+%goal expression;
+
+expression = term {: return new Expression(term); :};
+
+term = value | function;
+
+//value = id.a {: return new Value(id); :};
+value = True {: return new True(); :}
+      | False {: return new False(); :}
+      | Zero {: return new Zero(); :};
+
+//function_call = function.a LPAREN param_list.b RPAREN {: return a.addParams(b); :};
+
+function =
+  Or LPAREN term.Left COMMA term.Right RPAREN {: return new Or(Left, Right); :}
+  ;
+
+//param_list =
+//    term.a {: return new List().add(a); :}
+//  | param_list.a COMMA term.b {: return a.add(b); :}
+//  ;
+

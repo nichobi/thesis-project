@@ -1,0 +1,59 @@
+import java.util.ArrayList;
+
+aspect TypeChecker {
+
+  syn ArrayList<String> Expression.errors() = new ArrayList();
+  inh ArrayList<String> ASTNode.errors();
+  eq Expression.getChild().errors() = errors();
+
+	syn nta BoolType Expression.boolType() = new BoolType();
+	syn nta IntType  Expression.intType()  = new IntType();
+	syn nta AnyType  Expression.anyType()  = new AnyType();
+
+  eq Expression.getChild().boolType() = boolType();
+	eq Expression.getChild().intType()  = intType();
+	eq Expression.getChild().anyType()  = anyType();
+
+  inh BoolType ASTNode.boolType();
+  inh IntType ASTNode.intType();
+  inh AnyType ASTNode.anyType();
+
+  syn Type Term.type();
+  syn Type Expression.type() = getTerm().type();
+
+  syn boolean Type.matches(Type t) {
+    if(this == t || this == anyType() || t == anyType()) return true;
+    return false;
+  }
+
+	syn String Type.toString();
+	eq AnyType.toString()  = "Any";
+	eq IntType.toString()  = "Int";
+	eq BoolType.toString() = "Bool";
+}
+
+aspect TypeRules {
+
+	syn Type True.type() {
+		return boolType();
+	}
+
+  syn Type False.type() {
+    return boolType();
+  }
+
+  syn Type Or.type() {
+    if(getLeft().type().matches(boolType()) && getRight().type().matches(boolType())) {
+      return boolType();
+    } else {
+      errors().add("Unresolved type: Or(" + getLeft().type() + ", " + getRight().type() + ")");
+      return anyType();
+    }
+  }
+
+  syn Type Zero.type() {
+    return intType();
+  }
+
+}
+
