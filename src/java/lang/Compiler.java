@@ -50,6 +50,27 @@ public class Compiler {
       System.out.println();
       System.out.println(grammar.parentMap());
       System.out.println(grammar.getTypeDeclList());
+
+      String[] builtInNames = {"Opt", "List"};
+      List<ASTDecl> builtIns = new ArrayList<ASTDecl>();
+      for (ASTDecl i : grammar.subclassMap().keySet())
+        for ( String b : builtInNames)
+          if (i.toString().equals(b))
+            builtIns.add(i);
+
+      List<ASTDecl> terminals = new ArrayList<ASTDecl>();
+      for (ASTDecl i : grammar.subclassMap().keySet()) {
+        if (grammar.subclassMap().get(i).isEmpty()) {
+          terminals.add(i);
+        }
+      }
+      terminals.removeAll(grammar.roots());
+      terminals.removeAll(builtIns);
+
+      for (ASTDecl i : terminals)
+        System.out.println("Terminal: " + i);
+      OutputGeneration.generateScanner(terminals);
+
 //      for (TypeDecl td: grammar.findSubClasses(grammar.roots().get(0))) {
 //        System.out.println(td);
 //      }
