@@ -4,7 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
+import java.util.ArrayList;
 
+import lang.ast.RuleSet;
 import lang.ast.LangParser;
 import lang.ast.LangParser.SyntaxError;
 import lang.ast.LangScanner;
@@ -13,6 +16,7 @@ import org.jastadd.ast.AST.Grammar;
 import org.jastadd.ast.AST.ASTDecl;
 import org.jastadd.ast.AST.TypeDecl;
 import org.jastadd.ast.AST.Component;
+import lang.OutputGeneration;
 
 public class Compiler {
 	public static void main(String args[]) {
@@ -37,14 +41,15 @@ public class Compiler {
       System.out.println(grammar.subclassMap());
       System.out.println();
       for (ASTDecl i : grammar.subclassMap().keySet()) {
-        if (i instanceof TypeDecl) System.out.println(i);
+        System.out.println(i);
+        System.out.println("  Subclasses:" + grammar.subclassMap().get(i));
         for (Component comp : i.getComponents()) {
           System.out.println("  " + comp);
-          System.out.println("    " + comp.typeDecl());
-          System.out.println("    " + comp.hostClass());
-          System.out.println("    " + comp.name());
-          System.out.println("    " + comp.type());
-          System.out.println("    " + comp.kind());
+          System.out.println("    typeDecl: " + comp.typeDecl());
+          System.out.println("    hostClass: " + comp.hostClass());
+          System.out.println("    name: " + comp.name());
+          System.out.println("    type: " + comp.type());
+          System.out.println("    kind: " + comp.kind());
         }
       }
       System.out.println();
