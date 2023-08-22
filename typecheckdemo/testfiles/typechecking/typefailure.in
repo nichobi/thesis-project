@@ -1,1 +1,1 @@
-Or(Zero, True)
+Expression(Or(Zero, True))

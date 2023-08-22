@@ -9,36 +9,22 @@
   }
 :};
 
-%terminals LPAREN, RPAREN, ID, COMMA, True, False, Or, Zero;
+%terminals LPAREN, RPAREN, ID, COMMA;
 
-%typeof ruleset = "RuleSet";
-%typeof rule_list = "List<Rule>";
-%typeof premises_list = "List<Formula>";
-%typeof rule = "Rule";
-%typeof formula = "Formula";
-%typeof term = "Term";
-%typeof term_list = "List<Term>";
+%typeof node = "ASTNode";
+%typeof param_list = "List<ASTNode>";
 %typeof id = "String";
 
-%goal expression;
+%goal node;
 
-expression = term {: return new Expression(term); :};
+id = ID;
 
-term = value | function;
+node = id.a LPAREN param_list.b RPAREN {: return new Node(a, b).toASTNode(); :}
+     | id.a LPAREN RPAREN              {: return new Node(a).toASTNode(); :}
+     | id.a                            {: return new Node(a).toASTNode(); :}
+     ;
 
-//value = id.a {: return new Value(id); :};
-value = True {: return new True(); :}
-      | False {: return new False(); :}
-      | Zero {: return new Zero(); :};
-
-//function_call = function.a LPAREN param_list.b RPAREN {: return a.addParams(b); :};
-
-function =
-  Or LPAREN term.Left COMMA term.Right RPAREN {: return new Or(Left, Right); :}
+param_list = node.a {: return new List().add(a); :}
+  | param_list.a COMMA node.b {: return a.add(b); :}
   ;
-
-//param_list =
-//    term.a {: return new List().add(a); :}
-//  | param_list.a COMMA term.b {: return a.add(b); :}
-//  ;
 

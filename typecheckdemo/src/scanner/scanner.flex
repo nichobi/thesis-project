@@ -36,16 +36,12 @@ ID = [a-zA-Z0-9-]+
 // discard whitespace information
 {WhiteSpace}  { }
 
-"True"        {return sym(Terminals.True); }
-"False"       {return sym(Terminals.False); }
-"Zero"        {return sym(Terminals.Zero); }
-"Or"          {return sym(Terminals.Or); }
 
 // token definitions
 "("           { return sym(Terminals.LPAREN); }
 ")"           { return sym(Terminals.RPAREN); }
 ","           { return sym(Terminals.COMMA); }
-//{ID}          { return sym(Terminals.ID); }
+{ID}          { return sym(Terminals.ID); }
 //{Numeral}     { return sym(Terminals.NUMERAL); }
 <<EOF>>       { return sym(Terminals.EOF); }
 
