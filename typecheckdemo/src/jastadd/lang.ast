@@ -6,7 +6,7 @@ False : Term;
 Or : Term ::= Left:Term Right:Term;
 Zero : Term;
 
-abstract Type;
-Bool : Type;
-Int : Type;
+//abstract Type;
+//Bool : Type;
+//Int : Type;
 
