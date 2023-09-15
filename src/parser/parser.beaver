@@ -42,9 +42,9 @@ rule =
 formula = term.expr COLON term.ty {: return new HasType(expr, ty); :};
 
 term =
-    id.rulename LPAREN term_list.params RPAREN {: return new RuleTerm(rulename, params); :}
-  | id.rulename LPAREN RPAREN {: return new RuleTerm(rulename, new List()); :}
-  | id.id {: return new Identifier(id); :}
+    id.rulename LPAREN term_list.params RPAREN {: return new Function(rulename, params); :}
+  | id.rulename LPAREN RPAREN {: return new Function(rulename, new List()); :}
+  | id.id {: return new Value(id); :}
   ;
 
 term_list =

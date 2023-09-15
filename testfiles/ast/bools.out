@@ -2,30 +2,30 @@ RuleSet
   List
     Rule Name="T-True"
       HasType
-        Identifier ID="true"
-        Identifier ID="Bool"
+        Value ID="True"
+        Value ID="Bool"
       List
     Rule Name="T-False"
       HasType
-        Identifier ID="false"
-        Identifier ID="Bool"
+        Value ID="False"
+        Value ID="Bool"
       List
     Rule Name="T-Or"
       HasType
-        RuleTerm RuleName="or"
+        Function ID="Or"
           List
-            Identifier ID="a"
-            Identifier ID="b"
-        Identifier ID="Bool"
+            Value ID="left"
+            Value ID="right"
+        Value ID="Bool"
       List
         HasType
-          Identifier ID="a"
-          Identifier ID="Bool"
+          Value ID="left"
+          Value ID="Bool"
         HasType
-          Identifier ID="b"
-          Identifier ID="Bool"
+          Value ID="right"
+          Value ID="Bool"
     Rule Name="T-Zero"
       HasType
-        Identifier ID="0"
-        Identifier ID="Int"
+        Value ID="Zero"
+        Value ID="Int"
       List

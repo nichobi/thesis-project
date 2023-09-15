@@ -1,8 +1,8 @@
 RuleSet ::= Rule*;
 
 abstract Term;
-RuleTerm   : Term ::= <RuleName> Term*;
-Identifier : Term ::= <ID>;
+Function : Term ::= <ID> Term*;
+Value    : Term ::= <ID>;
 
 Rule ::= <Name> Conclusion:Formula Premises:Formula*;
 

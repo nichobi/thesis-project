@@ -1,18 +1,18 @@
 [T-True]
 -----------
-true : Bool
+True : Bool
 
 [T-False]
 ------------
-false : Bool
+False : Bool
 
 [T-Or]
-a : Bool,
-b : Bool
+left : Bool,
+right : Bool
 ---------------
-or(a, b) : Bool
+Or(left, right) : Bool
 
 [T-Zero]
 --------
-0 : Int
+Zero : Int
 
