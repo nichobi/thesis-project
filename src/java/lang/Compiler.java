@@ -73,8 +73,8 @@ public class Compiler {
 
       for (ASTDecl i : terminals)
         System.out.println("Terminal: " + i);
-      OutputGeneration.generateScanner(terminals);
-      OutputGeneration.generateParser(terminals);
+
+      OutputGeneration.generateTypeChecker(ruleSet);
 
 //      for (TypeDecl td: grammar.findSubClasses(grammar.roots().get(0))) {
 //        System.out.println(td);

@@ -1,93 +1,69 @@
 package lang;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import org.jastadd.JastAdd;
-import org.jastadd.ast.AST.Ast;
-import org.jastadd.ast.AST.ASTNode;
-import org.jastadd.ast.AST.ASTDecl;
-import org.jastadd.Configuration;
 import java.util.List;
+import lang.ast.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 class OutputGeneration {
-  public static void generateScanner(List<ASTDecl> terminals) {
-    StringBuilder scanDef = new StringBuilder();
-    scanDef.append(String.join("\n",
-      "package lang.ast; // The generated scanner will belong to the package lang.ast",
-      "",
-      "import lang.ast.LangParser.Terminals; // The terminals are implicitly defined in the parser",
-      "import lang.ast.LangParser.SyntaxError;",
-      "",
-      "%%",
-      "",
-      "// define the signature for the generated scanner",
-      "%public",
-      "%final",
-      "%class LangScanner",
-      "%extends beaver.Scanner",
-      "",
-      "// the interface between the scanner and the parser is the nextToken() method",
-      "%type beaver.Symbol",
-      "%function nextToken",
-      "",
-      "// store line and column information in the tokens",
-      "%line",
-      "%column",
-      "",
-      "// this code will be inlined in the body of the generated scanner class",
-      "%{",
-      "  private beaver.Symbol sym(short id) {",
-      "    return new beaver.Symbol(id, yyline + 1, yycolumn + 1, yylength(), yytext());",
-      "  }",
-      "%}",
-      "",
-      "// macros",
-      "WhiteSpace = [ ] | \\t | \\f | \\n | \\r",
-      "ID = [a-zA-Z0-9-]+",
-      "//Numeral = [0-9]+ \".\" [0-9]+",
-      "",
-      "%%",
-      "",
-      "// discard whitespace information",
-      "{WhiteSpace}  { }",
-      "\n"
-    ));
 
-    //String[] terminals = {"True", "False", "Zero", "Or"};
-    for(ASTDecl t : terminals)
-      scanDef.append("\"" + t + "\"  {return sym(Terminals." + t + "); }\n");
+  public static void generateTypeChecker(RuleSet ruleSet) {
+    Map<String, List<Rule>> ruleMap = new HashMap();
 
-    scanDef.append(String.join("\n",
-      "",
-      "// token definitions",
-      "\"(\"           { return sym(Terminals.LPAREN); }",
-      "\")\"           { return sym(Terminals.RPAREN); }",
-      "\",\"           { return sym(Terminals.COMMA); }",
-      "//{ID}          { return sym(Terminals.ID); }",
-      "//{Numeral}     { return sym(Terminals.NUMERAL); }",
-      "<<EOF>>       { return sym(Terminals.EOF); }",
-      "",
-      "/* error fallback */",
-      "[^]           { throw new SyntaxError(\"Illegal character <\"+yytext()+\">\"); }",
-      "\n"
-    ));
-
-    //Files.writeString(, scanDef.toString());
-    try {
-      new File("output/src/scanner/").mkdirs();
-      FileWriter fw = new FileWriter("output/src/scanner/scanner.flex");
-      fw.write(scanDef.toString());
-      fw.close();
-    } catch (IOException e) {
-      System.out.println("Cannot write scanner");
-      e.printStackTrace();
+    for (Rule r : ruleSet.getRules()) {
+      String target = r.target().codeString();
+      ruleMap.putIfAbsent(target, new LinkedList());
+      ruleMap.get(target).add(r);
     }
+    for (Map.Entry<String, List<Rule>> entry : ruleMap.entrySet()) {
+      System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+    }
+
+    StringBuilder typeCheckDef = new StringBuilder();
+    typeCheckDef.append("aspect TypeRules {\n\n");
+    for (String k : ruleMap.keySet()) {
+      typeCheckDef.append("syn Type " + k + ".type() {\n");
+      for (Rule r: ruleMap.get(k)) {
+        switch(r.getNumPremises()) {
+          case 0:
+            typeCheckDef.append(
+              r.getConclusion().generateConclusion()
+            );
+            break;
+          default:
+            typeCheckDef.append(r.getConclusion().generateDeclarations());
+            typeCheckDef.append("if(");
+            List<String> premiseStrings = new LinkedList<String>();
+            for (Formula p : r.getPremisesList()) {
+              premiseStrings.add(p.generatePremise());
+            }
+            typeCheckDef.append(String.join(" && ", premiseStrings));
+            typeCheckDef.append(") {\n");
+            typeCheckDef.append(
+              r.getConclusion().generateConclusion()
+            );
+            typeCheckDef.append("\n");
+            typeCheckDef.append("}\n");
+            typeCheckDef.append("throw new RuntimeException(\"Typechecking failed\");\n");
+        }
+        typeCheckDef.append("}\n");
+      }
+    }
+
+    typeCheckDef.append("}");
+
+    try {
+      BufferedWriter writer = new BufferedWriter(new FileWriter("output/src/jastadd/typechecking.jrag"));
+      writer.write(typeCheckDef.toString());
+      writer.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
   }
 }
-
-
 

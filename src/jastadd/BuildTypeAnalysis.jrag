@@ -1,0 +1,69 @@
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import org.jastadd.JastAdd;
+import org.jastadd.ast.AST.Ast;
+import org.jastadd.Configuration;
+
+aspect TypeAnalysisUtil {
+  syn String Formula.id();
+  eq HasType.id() = getExpr().id();
+  syn String Term.id();
+  eq Function.id() = getID();
+  eq Value.id() = getID();
+
+}
+
+aspect BuildTypeAnalysis {
+  syn String Term.codeString();
+  eq Value.codeString() {
+    return getID();
+  }
+  eq Function.codeString() {
+    return getID();
+  }
+
+  syn Term ASTNode.target() = null;
+  eq Rule.target() {
+    return getConclusion().target();
+  }
+  eq HasType.target() {
+    return getExpr();
+  }
+
+  syn String Formula.generateConclusion();
+  eq HasType.generateConclusion() {
+    return "return " + getTy().codeString() + "Type();";
+  }
+  syn String Formula.generatePremise();
+  eq HasType.generatePremise() {
+    return getExpr().codeString() + ".type().matches(" + getTy().codeString() + "Type())";
+  }
+
+  syn String Formula.generateDeclarations();
+  eq HasType.generateDeclarations() = getExpr().generateDeclarations();
+
+  syn String Term.generateDeclarations();
+
+  eq Value.generateDeclarations() = "\n";
+
+  eq Function.generateDeclarations() {
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < getNumTerm(); i++) {
+      if(getTerm(i) instanceof Value) {
+        sb.append("ASTNode " + getTerm(i).id() + " = getChild(" + i + ");\n");
+      }
+    }
+    return sb.toString();
+  }
+
+  syn String Rule.generateCode() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(String.join("\n",
+      "syn Type " + getConclusion().id() + ".type() {"
+      )
+    );
+    return sb.toString();
+  }
+
+}
