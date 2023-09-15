@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
-import lang.ast.RuleSet;
-import lang.ast.LangParser;
 import lang.ast.LangParser.SyntaxError;
-import lang.ast.LangScanner;
+import lang.ast.*;
 import org.jastadd.Configuration;
 import org.jastadd.ast.AST.Grammar;
 import org.jastadd.ast.AST.ASTDecl;
@@ -26,7 +25,7 @@ public class Compiler {
 		}
 
 		try {
-			parse(new FileReader(args[0]));
+			RuleSet ruleSet = (RuleSet) parse(new FileReader(args[0]));
 
       Configuration config = new Configuration(new String[]{args[1]}, System.err);
 
@@ -69,12 +68,13 @@ public class Compiler {
           terminals.add(i);
         }
       }
-      terminals.removeAll(grammar.roots());
+      //terminals.removeAll(grammar.roots());
       terminals.removeAll(builtIns);
 
       for (ASTDecl i : terminals)
         System.out.println("Terminal: " + i);
       OutputGeneration.generateScanner(terminals);
+      OutputGeneration.generateParser(terminals);
 
 //      for (TypeDecl td: grammar.findSubClasses(grammar.roots().get(0))) {
 //        System.out.println(td);
@@ -87,19 +87,19 @@ public class Compiler {
 		}
 	}
 
-	private static void parse(Reader reader) {
+	private static Object parse(Reader reader) {
 		LangScanner scanner = new LangScanner(reader);
 		LangParser parser = new LangParser();
 
 		try {
-			parser.parse(scanner);
-			System.out.println("Valid syntax");
+			return parser.parse(scanner);
 		} catch (SyntaxError | beaver.Parser.Exception e) {
 			System.err.println("Syntax error: " + e.getMessage());
 			System.exit(1);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
-	}
+    return null;
+  }
 }
