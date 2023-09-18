@@ -13,6 +13,7 @@ repositories.mavenCentral()
 configurations {
   jflex
   beaver
+  externalLibs
 }
 
 // Dependencies are Jar files needed to compile and generate the compiler.
@@ -24,7 +25,11 @@ dependencies {
   jflex 'de.jflex:jflex:1.8.2'
   beaver 'org.extendj:nbfront:0.1.6'
   jastadd2 "org.jastadd:jastadd:2.3.5" // Selects which JastAdd version to use (optional).
+  //implementation files('lib/metadl-jastadd2.jar')
   implementation files('lib/jastadd2.jar')
+  externalLibs files('lib/jastadd2.jar')
+  //compile fileTree(dir: 'lib', include: ['*.jar'])
+  //compile fileTree(dir: 'lib', include: '*.jar')
 }
 
 // Needed to work with old DrAST versions.
