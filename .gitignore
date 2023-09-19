@@ -8,7 +8,7 @@ bin/**
 .project
 compiler.jar
 src/gen/**
-output/**
+out/**
 
 !src/**/build/
 

@@ -1,0 +1,30 @@
+%class "LangParser";
+%package "lang.ast";
+
+%embed {:
+  static public class SyntaxError extends RuntimeException { public SyntaxError(String msg) {super(msg);}}
+  // Disable syntax error recovery
+  protected void recoverFromError(Symbol token, TokenStream in) {
+    throw new SyntaxError("Cannot recover from the syntax error");
+  }
+:};
+
+%terminals LPAREN, RPAREN, ID, COMMA;
+
+%typeof node = "ASTNode";
+%typeof param_list = "List<ASTNode>";
+%typeof id = "String";
+
+%goal node;
+
+id = ID;
+
+node = id.a LPAREN param_list.b RPAREN {: return new Node(a, b).toASTNode(); :}
+     | id.a LPAREN RPAREN              {: return new Node(a).toASTNode(); :}
+     | id.a                            {: return new Node(a).toASTNode(); :}
+     ;
+
+param_list = node.a {: return new List().add(a); :}
+  | param_list.a COMMA node.b {: return a.add(b); :}
+  ;
+

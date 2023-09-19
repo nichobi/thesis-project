@@ -7,6 +7,8 @@ import java.io.Reader;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import lang.ast.LangParser.SyntaxError;
 import lang.ast.*;
@@ -74,7 +76,10 @@ public class Compiler {
       for (ASTDecl i : terminals)
         System.out.println("Terminal: " + i);
 
-      OutputGeneration.generateTypeChecker(ruleSet);
+      Path outputDir = Paths.get("out");
+      OutputGeneration output = new OutputGeneration(outputDir);
+      output.prepareOutputDir();
+      output.generateTypeChecker(ruleSet);
 
 //      for (TypeDecl td: grammar.findSubClasses(grammar.roots().get(0))) {
 //        System.out.println(td);

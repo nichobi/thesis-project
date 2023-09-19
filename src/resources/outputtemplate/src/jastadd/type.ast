@@ -1,0 +1,5 @@
+abstract Type;
+BoolType : Type;
+IntType : Type;
+AnyType : Type;
+
