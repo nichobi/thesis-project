@@ -9,6 +9,7 @@ bin/**
 compiler.jar
 src/gen/**
 out/**
+testfiles/**/*.out
 
 !src/**/build/
 
