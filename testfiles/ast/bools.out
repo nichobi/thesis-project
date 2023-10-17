@@ -3,12 +3,12 @@ RuleSet
     Rule Name="T-True"
       HasType
         Value ID="True"
-        Value ID="Bool"
+        TyVal ID="Bool"
       List
     Rule Name="T-False"
       HasType
         Value ID="False"
-        Value ID="Bool"
+        TyVal ID="Bool"
       List
     Rule Name="T-Or"
       HasType
@@ -16,16 +16,16 @@ RuleSet
           List
             Value ID="left"
             Value ID="right"
-        Value ID="Bool"
+        TyVal ID="Bool"
       List
         HasType
           Value ID="left"
-          Value ID="Bool"
+          TyVal ID="Bool"
         HasType
           Value ID="right"
-          Value ID="Bool"
+          TyVal ID="Bool"
     Rule Name="T-Zero"
       HasType
         Value ID="Zero"
-        Value ID="Int"
+        TyVal ID="Int"
       List

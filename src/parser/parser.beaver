@@ -17,6 +17,7 @@
 %typeof rule = "Rule";
 %typeof formula = "Formula";
 %typeof term = "Term";
+%typeof tyterm = "TyTerm";
 %typeof term_list = "List<Term>";
 %typeof id = "String";
 
@@ -39,12 +40,16 @@ rule =
   | LBRACKET id.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
   ;
 
-formula = term.expr COLON term.ty {: return new HasType(expr, ty); :};
+formula = term.expr COLON tyterm.ty {: return new HasType(expr, ty); :};
 
 term =
     id.rulename LPAREN term_list.params RPAREN {: return new Function(rulename, params); :}
   | id.rulename LPAREN RPAREN {: return new Function(rulename, new List()); :}
   | id.id {: return new Value(id); :}
+  ;
+
+tyterm =
+    id.id {: return new TyVal(id); :}
   ;
 
 term_list =

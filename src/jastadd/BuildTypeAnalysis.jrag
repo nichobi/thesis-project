@@ -31,13 +31,21 @@ aspect BuildTypeAnalysis {
     return getExpr();
   }
 
+  syn String TyTerm.codeString();
+  eq TyVal.codeString() {
+    return getID() + "Type()";
+  }
+  eq MetaVar.codeString() {
+    return getID() + "Type()";
+  }
+
   syn String Formula.generateConclusion();
   eq HasType.generateConclusion() {
-    return "return " + getTy().codeString() + "Type();";
+    return "return " + getTy().codeString() + ";";
   }
   syn String Formula.generatePremise();
   eq HasType.generatePremise() {
-    return getExpr().codeString() + ".type().matches(" + getTy().codeString() + "Type())";
+    return getExpr().codeString() + ".type().matches(" + getTy().codeString() + ")";
   }
 
   syn String Formula.generateDeclarations();
