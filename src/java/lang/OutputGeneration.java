@@ -10,6 +10,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -86,6 +87,15 @@ class OutputGeneration {
     try {
       copyFromJar("outputtemplate/", outputDir);
     } catch (URISyntaxException | IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  public void copyASTDef(String path) {
+    try {
+      Files.copy(Paths.get(path), outputDir.resolve("src/jastadd/lang.ast"), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

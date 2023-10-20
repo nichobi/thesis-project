@@ -80,6 +80,7 @@ public class Compiler {
       OutputGeneration output = new OutputGeneration(outputDir);
       output.prepareOutputDir();
       output.generateTypeChecker(ruleSet);
+      output.copyASTDef(args[1]);
 
 //      for (TypeDecl td: grammar.findSubClasses(grammar.roots().get(0))) {
 //        System.out.println(td);
