@@ -11,5 +11,5 @@ HasType : Formula ::= Expr:Term Ty:TyTerm;
 
 abstract TyTerm;
 TyVal   : TyTerm ::= <ID>;
-MetaVar : TyTerm ::= <ID>;
+TyVar : TyTerm ::= <ID>;
 

@@ -35,8 +35,27 @@ aspect BuildTypeAnalysis {
   eq TyVal.codeString() {
     return getID() + "Type()";
   }
-  eq MetaVar.codeString() {
-    return getID() + "Type()";
+  eq TyVar.codeString() = "tyvar_" + getID();
+
+  syn String TyTerm.generateTypeVariableCheck();
+  eq TyVal.generateTypeVariableCheck() = "\n";
+  inh String TyTerm.correspondsTo();
+  eq HasType.getTy().correspondsTo() = getExpr().codeString();
+  eq TyVar.generateTypeVariableCheck() =
+      "if(" + codeString() + " == null) " + codeString() + " = " + correspondsTo() + ".type();\n"
+    + "else if (" + codeString() + " != " + correspondsTo() + ".type())\n"
+    + "throw new RuntimeException(\"Typechecking failed: Type variable mismatch\");\n";
+
+  syn String Formula.generateTypeVariableCheck();
+  eq HasType.generateTypeVariableCheck() {
+    return getTy().generateTypeVariableCheck();
+  }
+  syn String Rule.generateTypeVariableCheck() {
+    StringBuilder sb = new StringBuilder();
+    for (Formula p : getPremisesList()) {
+      sb.append(p.generateTypeVariableCheck());
+    }
+    return sb.toString();
   }
 
   syn String Formula.generateConclusion();
@@ -48,8 +67,15 @@ aspect BuildTypeAnalysis {
     return getExpr().codeString() + ".type().matches(" + getTy().codeString() + ")";
   }
 
+  syn String TyTerm.generateDeclarations();
+  eq TyVal.generateDeclarations() = "\n";
+  eq TyVar.generateDeclarations() = "Type " + codeString() + " = null;\n";
+
   syn String Formula.generateDeclarations();
-  eq HasType.generateDeclarations() = getExpr().generateDeclarations();
+  eq HasType.generateDeclarations() =
+    getExpr().generateDeclarations()
+      + "\n"
+      + getTy().generateDeclarations();
 
   syn String Term.generateDeclarations();
 

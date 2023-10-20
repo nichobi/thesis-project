@@ -53,6 +53,7 @@ class OutputGeneration {
             break;
           default:
             typeCheckDef.append(r.getConclusion().generateDeclarations());
+            typeCheckDef.append(r.generateTypeVariableCheck());
             typeCheckDef.append("if(");
             List<String> premiseStrings = new LinkedList<String>();
             for (Formula p : r.getPremisesList()) {
