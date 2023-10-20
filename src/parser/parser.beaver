@@ -9,7 +9,7 @@
 	}
 :};
 
-%terminals COLON, SEP, LBRACKET, RBRACKET, LPAREN, RPAREN, ID, COMMA;
+%terminals COLON, SEP, LBRACKET, RBRACKET, LPAREN, RPAREN, ID, UPPERID, LOWERID, COMMA;
 
 %typeof ruleset = "RuleSet";
 %typeof rule_list = "List<Rule>";
@@ -20,6 +20,8 @@
 %typeof tyterm = "TyTerm";
 %typeof term_list = "List<Term>";
 %typeof id = "String";
+%typeof upperid = "String";
+%typeof lowerid = "String";
 
 %goal ruleset;
 
@@ -36,20 +38,22 @@ premises_list =
 	;
 
 rule =
-    LBRACKET id.id RBRACKET premises_list.premises SEP formula.conclusion {: return new Rule(id, conclusion, premises); :}
-  | LBRACKET id.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
+    LBRACKET upperid.id RBRACKET premises_list.premises SEP formula.conclusion {: return new Rule(id, conclusion, premises); :}
+  | LBRACKET upperid.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
   ;
 
 formula = term.expr COLON tyterm.ty {: return new HasType(expr, ty); :};
 
 term =
-    id.rulename LPAREN term_list.params RPAREN {: return new Function(rulename, params); :}
-  | id.rulename LPAREN RPAREN {: return new Function(rulename, new List()); :}
-  | id.id {: return new Value(id); :}
+    upperid.rulename LPAREN term_list.params RPAREN {: return new Function(rulename, params); :}
+  | upperid.rulename LPAREN RPAREN {: return new Function(rulename, new List()); :}
+  | upperid.id {: return new Value(id); :}
+  | lowerid.id {: return new Value(id); :}
   ;
 
 tyterm =
-    id.id {: return new TyVal(id); :}
+    upperid.id {: return new TyVal(id); :}
+  | lowerid.id {: return new TyVar(id); :}
   ;
 
 term_list =
@@ -57,5 +61,7 @@ term_list =
 	| term_list.a COMMA term.b {: return a.add(b); :}
 	;
 
-id = ID;
+//id = ID;
+upperid = UPPERID;
+lowerid = LOWERID;
 

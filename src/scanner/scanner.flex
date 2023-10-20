@@ -28,7 +28,9 @@ import lang.ast.LangParser.SyntaxError;
 
 // macros
 WhiteSpace = [ ] | \t | \f | \n | \r
-ID = [a-zA-Z0-9-]+
+//ID = [a-zA-Z0-9-]+
+UpperID = [A-Z][a-zA-Z0-9-]*
+LowerID = [a-z][a-zA-Z0-9-]*
 SEP = ---+
 //Numeral = [0-9]+ "." [0-9]+
 
@@ -45,7 +47,9 @@ SEP = ---+
 "("           { return sym(Terminals.LPAREN); }
 ")"           { return sym(Terminals.RPAREN); }
 ","           { return sym(Terminals.COMMA); }
-{ID}          { return sym(Terminals.ID); }
+//{ID}          { return sym(Terminals.ID); }
+{UpperID}     { return sym(Terminals.UPPERID); }
+{LowerID}     { return sym(Terminals.LOWERID); }
 //{Numeral}     { return sym(Terminals.NUMERAL); }
 <<EOF>>       { return sym(Terminals.EOF); }
 
