@@ -4,6 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import org.jastadd.JastAdd;
 import org.jastadd.ast.AST.Ast;
 import org.jastadd.Configuration;
+import java.util.Map;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 aspect TypeAnalysisUtil {
   syn String Formula.id();
@@ -15,6 +19,56 @@ aspect TypeAnalysisUtil {
 }
 
 aspect BuildTypeAnalysis {
+
+  syn String RuleSet.generateTypeChecker(){
+    Map<String, java.util.List<Rule>> ruleMap = new HashMap();
+
+    for (Rule r : getRules()) {
+      String target = r.target().codeString();
+      ruleMap.putIfAbsent(target, new LinkedList());
+      ruleMap.get(target).add(r);
+    }
+    for (Map.Entry<String, java.util.List<Rule>> entry : ruleMap.entrySet()) {
+      System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+    }
+
+    StringBuilder typeCheckDef = new StringBuilder();
+    typeCheckDef.append("aspect TypeRules {\n\n");
+    for (String k : ruleMap.keySet()) {
+      typeCheckDef.append("syn Type " + k + ".type() {\n");
+      for (Rule r: ruleMap.get(k)) {
+        switch(r.getNumPremises()) {
+          case 0:
+            typeCheckDef.append(
+              r.getConclusion().generateConclusion()
+            );
+            break;
+          default:
+            typeCheckDef.append(r.getConclusion().generateDeclarations());
+            typeCheckDef.append(r.generateTypeVariableCheck());
+            typeCheckDef.append("if(");
+            java.util.List<String> premiseStrings = new LinkedList<String>();
+            for (Formula p : r.getPremisesList()) {
+              premiseStrings.add(p.generatePremise());
+            }
+            typeCheckDef.append(String.join(" && ", premiseStrings));
+            typeCheckDef.append(") {\n");
+            typeCheckDef.append(
+              r.getConclusion().generateConclusion()
+            );
+            typeCheckDef.append("\n");
+            typeCheckDef.append("}\n");
+            typeCheckDef.append("throw new RuntimeException(\"Typechecking failed\");\n");
+        }
+        typeCheckDef.append("}\n");
+      }
+    }
+
+    typeCheckDef.append("}");
+
+    return typeCheckDef.toString();
+  }
+
   syn String Term.codeString();
   eq Value.codeString() {
     return getID();
