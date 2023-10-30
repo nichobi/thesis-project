@@ -2,37 +2,22 @@ import java.util.ArrayList;
 
 aspect TypeChecker {
 
-  syn ArrayList<String> Expression.errors() = new ArrayList();
-  inh ArrayList<String> ASTNode.errors();
-  eq Expression.getChild().errors() = errors();
 
   syn Type Expression.checkTypes() {
     return getTerm().type();
   }
 
-  syn nta BoolType Expression.BoolType() = new BoolType();
-  syn nta IntType  Expression.IntType()  = new IntType();
-  syn nta AnyType  Expression.AnyType()  = new AnyType();
 
-  eq Expression.getChild().BoolType() = BoolType();
-  eq Expression.getChild().IntType()  = IntType();
-  eq Expression.getChild().AnyType()  = AnyType();
 
-  inh BoolType ASTNode.BoolType();
-  inh IntType ASTNode.IntType();
-  inh AnyType ASTNode.AnyType();
 
-  syn Type ASTNode.type() = null;
-  syn Type Expression.type() = getTerm().type();
-
-  syn boolean Type.matches(Type t) {
-    if(this == t || this == AnyType() || t == AnyType()) return true;
-    return false;
+  syn Type ASTNode.type() {
+    throw new RuntimeException("Calling .type() on a class without declared typing rules");
   }
 
-  syn String Type.toString();
-  eq AnyType.toString()  = "Any";
-  eq IntType.toString()  = "Int";
-  eq BoolType.toString() = "Bool";
+  syn boolean Type.matches(Type t) {
+    //if(this == t || this == AnyType() || t == AnyType()) return true;
+    //return false;
+    return t.getClass().isAssignableFrom(getClass());
+  }
 }
 

@@ -1,5 +1,4 @@
 abstract Type;
-BoolType : Type;
-IntType : Type;
-AnyType : Type;
+Bool : Type;
+Int : Type;
 

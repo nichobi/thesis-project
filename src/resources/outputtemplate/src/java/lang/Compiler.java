@@ -38,7 +38,6 @@ public class Compiler {
             DrAST_root_node = program; //Enable debugging with DrAST
 			System.out.println(program.dumpTree());
 			System.out.println(program.checkTypes());
-			System.out.println(program.errors());
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found!");
 			System.exit(1);

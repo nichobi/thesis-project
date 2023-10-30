@@ -90,7 +90,7 @@ aspect BuildTypeAnalysis {
 
   syn String TyTerm.codeString();
   eq TyVal.codeString() {
-    return getID() + "Type()";
+    return "new " + getID() + "()";
   }
   eq TyVar.codeString() = "tyvar_" + getID();
 
@@ -100,7 +100,7 @@ aspect BuildTypeAnalysis {
   eq HasType.getTy().correspondsTo() = getExpr().codeString();
   eq TyVar.generateTypeVariableCheck() =
       "if(" + codeString() + " == null) " + codeString() + " = " + correspondsTo() + ".type();\n"
-    + "else if (" + codeString() + " != " + correspondsTo() + ".type())\n"
+    + "else if (!" + codeString() + ".matches(" + correspondsTo() + ".type()))\n"
     + "throw new RuntimeException(\"Typechecking failed: Type variable mismatch\");\n";
 
   syn String Formula.generateTypeVariableCheck();
