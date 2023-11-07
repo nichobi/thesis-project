@@ -6,7 +6,7 @@ import org.jastadd.ast.AST.Ast;
 import org.jastadd.Configuration;
 import java.util.Map;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 aspect TypeAnalysisUtil {
@@ -21,7 +21,9 @@ aspect TypeAnalysisUtil {
 aspect BuildTypeAnalysis {
 
   syn String RuleSet.generateTypeChecker(){
-    Map<String, java.util.List<Rule>> ruleMap = new HashMap();
+    // LinkedHashMap preserves insertion order, so rules are output in the same
+    // order as defined
+    Map<String, java.util.List<Rule>> ruleMap = new LinkedHashMap();
 
     for (Rule r : getRules()) {
       String target = r.target().codeString();
@@ -36,10 +38,10 @@ aspect BuildTypeAnalysis {
       for (Rule r: ruleMap.get(k)) {
         typeCheckDef.append(r.generateRuleChecker());
       }
-      typeCheckDef.append("}\n");
+      typeCheckDef.append("}\n\n");
     }
 
-    typeCheckDef.append("}");
+    typeCheckDef.append("}\n");
 
     return typeCheckDef.toString();
   }
@@ -49,7 +51,7 @@ aspect BuildTypeAnalysis {
     switch(getNumPremises()) {
       case 0:
         ruleDef.append(
-          getConclusion().generateConclusion()
+          getConclusion().generateConclusion() + "\n"
         );
         break;
       default:
@@ -95,7 +97,9 @@ aspect BuildTypeAnalysis {
   eq TyVar.codeString() = "tyvar_" + getID();
 
   syn String TyTerm.generateTypeVariableCheck();
-  eq TyVal.generateTypeVariableCheck() = "\n";
+  eq TyVal.generateTypeVariableCheck() {
+    return "";
+  }
   inh String TyTerm.correspondsTo();
   eq HasType.getTy().correspondsTo() = getExpr().codeString();
   eq TyVar.generateTypeVariableCheck() =
@@ -125,7 +129,9 @@ aspect BuildTypeAnalysis {
   }
 
   syn String TyTerm.generateDeclarations();
-  eq TyVal.generateDeclarations() = "\n";
+  eq TyVal.generateDeclarations() {
+    return "";
+  }
   eq TyVar.generateDeclarations() = "Type " + codeString() + " = null;\n";
 
   syn String Formula.generateDeclarations();
@@ -136,7 +142,9 @@ aspect BuildTypeAnalysis {
 
   syn String Term.generateDeclarations();
 
-  eq Value.generateDeclarations() = "\n";
+  eq Value.generateDeclarations() {
+    return "";
+  }
 
   eq Function.generateDeclarations() {
     StringBuilder sb = new StringBuilder();
@@ -145,15 +153,6 @@ aspect BuildTypeAnalysis {
         sb.append("ASTNode " + getTerm(i).id() + " = getChild(" + i + ");\n");
       }
     }
-    return sb.toString();
-  }
-
-  syn String Rule.generateCode() {
-    StringBuilder sb = new StringBuilder();
-    sb.append(String.join("\n",
-      "syn Type " + getConclusion().id() + ".type() {"
-      )
-    );
     return sb.toString();
   }
 
