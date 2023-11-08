@@ -39,7 +39,8 @@ premises_list =
 
 rule =
     LBRACKET upperid.id RBRACKET premises_list.premises SEP formula.conclusion {: return new Rule(id, conclusion, premises); :}
-  | LBRACKET upperid.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
+//| LBRACKET upperid.id RBRACKET SEP formula.conclusion {: return new Rule(id, conclusion, new List()); :}
+  | LBRACKET upperid.id RBRACKET formula.conclusion {: return new Rule(id, conclusion, new List()); :}
   ;
 
 formula = term.expr COLON tyterm.ty {: return new HasType(expr, ty); :};

@@ -1,18 +1,15 @@
 [T-True]
------------
 True : Bool
 
 [T-False]
-------------
 False : Bool
 
 [T-Or]
 left : Bool,
 right : Bool
----------------
+----------------------
 Or(left, right) : Bool
 
 [T-Zero]
---------
 Zero : Int
 
