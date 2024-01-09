@@ -2,14 +2,6 @@ import java.util.ArrayList;
 
 aspect TypeChecker {
 
-
-  syn Type Expression.checkTypes() {
-    return getTerm().type();
-  }
-
-
-
-
   syn Type ASTNode.type() {
     throw new RuntimeException("Calling .type() on a class without declared typing rules");
   }
@@ -17,7 +9,8 @@ aspect TypeChecker {
   syn boolean Type.matches(Type t) {
     //if(this == t || this == AnyType() || t == AnyType()) return true;
     //return false;
-    return t.getClass().isAssignableFrom(getClass());
+    //return t.getClass().isAssignableFrom(getClass());
+    return getClass().equals(t.getClass());
   }
 }
 

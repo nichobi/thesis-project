@@ -23,7 +23,7 @@ class Node {
   public ASTNode toASTNode(){
     try {
       Class c = Class.forName("lang.ast." + name);
-      for (Constructor constr : c.getDeclaredConstructors()) {
+      for (Constructor constr : c.getConstructors()) {
         Class[] parTypes  = constr.getParameterTypes();
         if(parTypes.length == children.size()) {
           boolean matching = true;
