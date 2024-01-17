@@ -1,0 +1,11 @@
+Expression ::= Term;
+
+abstract Term;
+True   : Term;
+False  : Term;
+If     : Term ::= Cond:Term Then:Term Else:Term;
+Zero   : Term;
+Succ   : Term ::= Term;
+Pred   : Term ::= Term;
+IsZero : Term ::= Term;
+

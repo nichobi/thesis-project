@@ -1,0 +1,29 @@
+[T-True]
+True : Bool
+
+[T-False]
+False : Bool
+
+[T-Or]
+a : Bool,
+b : Bool
+---------------
+Or(a, b) : Bool
+
+[T-Zero]
+Zero : Int
+
+[T-IfElse-Int]
+x: Bool,
+y: Int,
+z: Int
+--------------------
+IfElse(x, y, z): Int
+
+[T-IfElse-Bool]
+x: Bool,
+y: Bool,
+z: Bool
+---------------------
+IfElse(x, y, z): Bool
+

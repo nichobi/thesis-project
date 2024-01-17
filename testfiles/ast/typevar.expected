@@ -1,0 +1,49 @@
+RuleSet
+  List
+    Rule Name="T-True"
+      HasType
+        Value ID="True"
+        TyVal ID="Bool"
+      List
+    Rule Name="T-False"
+      HasType
+        Value ID="False"
+        TyVal ID="Bool"
+      List
+    Rule Name="T-Or"
+      HasType
+        Function ID="Or"
+          List
+            Value ID="a"
+            Value ID="b"
+        TyVal ID="Bool"
+      List
+        HasType
+          Value ID="a"
+          TyVal ID="Bool"
+        HasType
+          Value ID="b"
+          TyVal ID="Bool"
+    Rule Name="T-Zero"
+      HasType
+        Value ID="Zero"
+        TyVal ID="Int"
+      List
+    Rule Name="T-IfElse"
+      HasType
+        Function ID="IfElse"
+          List
+            Value ID="x"
+            Value ID="y"
+            Value ID="z"
+        TyVar ID="a"
+      List
+        HasType
+          Value ID="x"
+          TyVal ID="Bool"
+        HasType
+          Value ID="y"
+          TyVar ID="a"
+        HasType
+          Value ID="z"
+          TyVar ID="a"

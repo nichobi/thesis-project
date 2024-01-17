@@ -1,0 +1,31 @@
+[T-True]
+True : Bool
+
+[T-False]
+False : Bool
+
+[T-If]
+t1: Bool,
+t2: t,
+t3: t
+------------------
+If(t1, t2, t3): t
+
+[T-Zero]
+Zero : Int
+
+[T-Succ]
+t1: Int
+------------------
+Succ(t1): Int
+
+[T-Pred]
+t1: Int
+------------------
+Pred(t1): Int
+
+[T-IsZero]
+t1: Int
+------------------
+IsZero(t1): Bool
+
